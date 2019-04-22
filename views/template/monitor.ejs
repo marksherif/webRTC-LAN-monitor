@@ -1,0 +1,170 @@
+<%layout('../layout')%>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Mark</title>
+    <style>
+        body {
+            background-color: rgb(255, 255, 255);
+            margin-top: 15px;
+            font-family: sans-serif;
+            color: black;
+        }
+
+        video {
+            background: black;
+            border: 1px solid gray;
+        }
+
+        .page {
+            position: relative;
+            display: block;
+            margin: 0 auto;
+            width: 500px;
+            height: 500px;
+        }
+
+        #yours {
+            width: 500px;
+            height: 500px;
+        }
+
+        #received {
+            display: block;
+            width: 480px;
+            height: 100px;
+            background: white;
+            padding: 10px;
+            margin-top: 10px;
+            color: black;
+            overflow: scroll;
+        }
+
+        .page {
+            position: relative;
+            /* display: block; */
+            margin: 0 auto;
+            width: 500px;
+            height: 500px;
+        }
+
+        .avatar {
+            height: 80px;
+            position: relative;
+            width: 80px;
+        }
+
+        .avatar img {
+            border-radius: 9999px;
+            height: 100%;
+            position: relative;
+            width: 100%;
+            z-index: 2;
+        }
+
+        @keyframes cycle-colors {
+            0% {
+                border-color: hsl(0, 100%, 50%);
+            }
+
+            25% {
+                border-color: hsl(90, 100%, 50%);
+            }
+
+            50% {
+                border-color: hsl(180, 100%, 50%);
+            }
+
+            75% {
+                border-color: hsl(270, 100%, 50%);
+            }
+
+            100% {
+                border-color: hsl(360, 100%, 50%);
+            }
+        }
+
+        @keyframes pulse {
+            to {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+
+        .avatar::before,
+        .avatar::after {
+            animation: pulse 2s linear infinite;
+            border: hsl(360, 100%, 50%) solid 8px;
+            border-radius: 9999px;
+            box-sizing: border-box;
+            content: ' ';
+            height: 140%;
+            left: -20%;
+            opacity: .6;
+            position: absolute;
+            top: -20%;
+            transform: scale(0.714);
+            width: 140%;
+            z-index: 1;
+        }
+
+        .avatar::after {
+            animation-delay: 1s;
+        }
+
+        .avatar:hover img {
+            content: url('http://s.blixt.org/hypnotoad.jpg');
+        }
+
+        .avatar:hover::before,
+        .avatar:hover::after {
+            animation: pulse 1s linear infinite, cycle-colors 6s linear infinite;
+        }
+
+        .avatar:hover::after {
+            animation-delay: .5s;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="call-page" class="page">
+        <h2 id="user_id_welcome"></h2>
+        <video id="yours" muted=true autoplay></video>
+        <br>
+        <br>
+        <div id="live" class="avatar">
+            <img src="/images/live.PNG" title="Admin is currently viewing this monitor"
+                alt="Admin is currently viewing this monitor" width="100" height="80">
+        </div>
+        <br>
+        <br>
+        <div id="song"></div>
+        <!-- <button id="call">Call</button>
+        <button id="hangup">Hang Up</button>
+        <input type="text" id="message"></input>
+        <button id="send">Send</button>
+        <div id="received"></div>
+        <h2>File Sharing</h2>
+        <div id="ready"></div>
+        <br />
+        <br />
+        <input type="file" id="files" name="file">
+        <button id="send-file">Send</button>
+        <br />
+        <br />
+        Downloading progress:
+        <progress id="download-progress" value="0" max="100"></progress> -->
+    </div>
+    <div id="list">
+        <ul id="users">
+
+        </ul>
+    </div>
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

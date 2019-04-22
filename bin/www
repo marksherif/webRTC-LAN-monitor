@@ -1,0 +1,235 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('node-sbadmin:server');
+
+var https = require("https");
+const fs = require('fs');
+var WebSocketServer = require('ws').Server,
+  // wss = new WebSocketServer({ port: 8888 }),
+  users = {};
+
+/**
+ * Create HTTPS server.
+ */
+const server = https.createServer({
+  key: fs.readFileSync('./certificates/key.pem'),
+  cert: fs.readFileSync('./certificates/cert.pem'),
+  passphrase: 'mark'
+}, app)
+  .listen(3000);
+const wss = new WebSocketServer({ server });
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(3000);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+
+//--------------------------------------------------------------------------------------------------------
+
+wss.on('connection', function (connection) {
+
+  var user_id = Math.random().toString(36).slice(2) + Date.now()
+
+  //This is to insure that no two users would have the same ID
+  while (users[user_id]) {
+    user_id = Math.random().toString(36).slice(2) + Date.now()
+  }
+
+  users[user_id] = connection;
+  connection.name = user_id;
+  sendTo(connection, {
+    type: "login",
+    success: true,
+    id: user_id
+  });
+  console.log("User logged in as", user_id);
+  console.log(Object.keys(users).filter(function (x) { return x !== user_id; }));
+
+  for (i = 0; i < Object.keys(users).length; i++) {
+    var conn = users[Object.keys(users)[i]];
+    sendTo(conn, {
+      type: "new_user",
+      users: Object.keys(users)
+    });
+  }
+
+  connection.on('message', function (message) {
+    var data;
+    try {
+      data = JSON.parse(message);
+    } catch (e) {
+      console.log("Error parsing JSON");
+      data = {};
+    }
+
+    switch (data.type) {
+      case "offer":
+        console.log("Sending offer to", data.name);
+        var conn = users[data.name];
+        if (conn != null) {
+          connection.otherName = data.name;
+          sendTo(conn, {
+            type: "offer",
+            offer: data.offer,
+            name: connection.name
+          });
+        }
+        break;
+      case "answer":
+        console.log("Sending answer to", data.name);
+        var conn = users[data.name];
+        if (conn != null) {
+          connection.otherName = data.name;
+          sendTo(conn, {
+            type: "answer",
+            answer: data.answer
+          });
+        }
+        break;
+      case "candidate":
+        console.log("Sending candidate to", data.name);
+        var conn = users[data.name];
+        if (conn != null) {
+          sendTo(conn, {
+            type: "candidate",
+            candidate: data.candidate
+          });
+        }
+        break;
+      case "leave":
+        console.log("Disconnecting user from", data.name);
+        var conn = users[data.name];
+        conn.otherName = null;
+        if (conn != null) {
+          sendTo(conn, {
+            type: "leave"
+          });
+        }
+        break;
+      case "rename":
+        if (users[data.monitor_new]) {
+          var conn = users[data.admin_id];
+          console.log(conn);
+
+          console.log("ID TAKEN");
+
+          sendTo(conn, {
+            type: "id_taken",
+            id: data.monitor_new
+          });
+          break;
+        }
+        console.log("Renaming", data.monitor_old, "to", data.monitor_new);
+        var conn = users[data.monitor_old];
+
+        sendTo(conn, {
+          type: "login",
+          success: true,
+          id: data.monitor_new
+        });
+
+        delete users[data.monitor_old];
+
+        conn.name = data.monitor_new
+        users[data.monitor_new] = conn;
+
+        for (i = 0; i < Object.keys(users).length; i++) {
+          var conn = users[Object.keys(users)[i]];
+          sendTo(conn, {
+            type: "new_user",
+            users: Object.keys(users)
+          });
+        }
+        break;
+      default:
+        sendTo(connection, {
+          type: "error",
+          message: "Unrecognized command: " + data.type
+        });
+        break;
+    }
+
+  });
+
+  connection.onclose = function (event) {
+    console.log(connection.name + " logged off. Updating logged in users");
+    if (connection.name) {
+      delete users[connection.name];
+      if (connection.otherName) {
+        console.log("Disconnecting user from",
+          connection.otherName);
+        var conn = users[connection.otherName];
+        // conn.otherName = null;
+        if (conn != null) {
+          sendTo(conn, {
+            type: "leave"
+          });
+        }
+      }
+    }
+    for (i = 0; i < Object.keys(users).length; i++) {
+      var conn = users[Object.keys(users)[i]];
+      sendTo(conn, {
+        type: "new_user",
+        users: Object.keys(users)
+      });
+    }
+  };
+});
+
+function sendTo(conn, message) {
+  conn.send(JSON.stringify(message));
+}
+
+wss.on('listening', function () {
+  console.log("Server started...");
+});   

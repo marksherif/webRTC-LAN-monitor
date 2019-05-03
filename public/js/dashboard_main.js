@@ -290,6 +290,7 @@ function onLeave() {
     callButton.disabled = false;
     rename.disabled = false;
     sendFileButton.disabled = true;
+    email_sent = false;
     soundMeter.stop()
     var interval_id = window.setInterval("", 9999);
     for (var i = 1; i < interval_id; i++)

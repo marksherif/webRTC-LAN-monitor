@@ -176,6 +176,7 @@ function setupPeerConnection(stream) {
 
     yourConnection.ontrack = function (e) {
         theirVideo.srcObject = e.streams[0];
+        soundLevel(e.streams[0])
         hangUpButton.disabled = false;
         callButton.disabled = true;
         rename.disabled = true;
@@ -289,6 +290,10 @@ function onLeave() {
     callButton.disabled = false;
     rename.disabled = false;
     sendFileButton.disabled = true;
+    soundMeter.stop()
+    var interval_id = window.setInterval("", 9999);
+    for (var i = 1; i < interval_id; i++)
+        window.clearInterval(i);
 };
 
 function openDataChannel() {
@@ -399,4 +404,90 @@ function initSound(audioBase64) {
     audio.controls = true;
     document.body.appendChild(audio);
     audio.play();
+}
+
+//Quiet mode
+var email_sent = false;
+
+var instantMeter = document.getElementById('sound_monitor');
+
+var instantValueDisplay = document.getElementById('sound_value');
+
+try {
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    window.audioContext = new AudioContext();
+} catch (e) {
+    alert('Web Audio API not supported.');
+}
+
+var soundMeter;
+var interval;
+function soundLevel(stream) {
+    // Put variables in global scope to make them available to the
+    // browser console.
+    window.stream = stream;
+    soundMeter = window.soundMeter = new SoundMeter(window.audioContext);
+    soundMeter.connectToSource(stream, function (e) {
+        if (e) {
+            alert(e);
+            return;
+        }
+        interval = setInterval(() => {
+            instantMeter.value = instantValueDisplay.innerText =
+                soundMeter.instant.toFixed(2);
+        }, 100);
+    });
+}
+
+function SoundMeter(context) {
+    this.context = context;
+    this.instant = 0.0;
+    this.script = context.createScriptProcessor(2048, 1, 1);
+    const that = this;
+    this.script.onaudioprocess = function (event) {
+        const input = event.inputBuffer.getChannelData(0);
+        let i;
+        let sum = 0.0;
+        for (i = 0; i < input.length; ++i) {
+            sum += input[i] * input[i];
+        }
+        that.instant = Math.sqrt(sum / input.length);
+        if (that.instant > 0.4 && !email_sent && document.getElementById('quiet_mode').checked) {
+            console.log("Loud noises");
+            email_sent = true;
+            sendEmail();
+        }
+    };
+}
+
+var mic;
+
+SoundMeter.prototype.connectToSource = function (stream, callback) {
+    console.log('SoundMeter connecting');
+    try {
+        mic = this.context.createMediaStreamSource(stream);
+        mic.connect(this.script);
+        // necessary to make sample run, but should not be.
+        this.script.connect(this.context.destination);
+        if (typeof callback !== 'undefined') {
+            callback(null);
+        }
+    } catch (e) {
+        console.error(e);
+        if (typeof callback !== 'undefined') {
+            callback(e);
+        }
+    }
+};
+
+SoundMeter.prototype.stop = function () {
+    mic.disconnect();
+    this.script.disconnect();
+    instantMeter.value = instantValueDisplay.innerText = 0.00;
+};
+
+function sendEmail() {
+    send({
+        type: "notify"
+    });
 }

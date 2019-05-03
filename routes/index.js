@@ -1,3 +1,4 @@
+var current_user;
 module.exports = function (app, passport) {
 
 	/* GET home page. */
@@ -35,6 +36,7 @@ module.exports = function (app, passport) {
 		res.render('template/readme', {});
 	});
 	app.get('/dashboard', isAuthenticated, function (req, res) {
+		module.exports.current_user = req.session.passport.user
 		res.render('template/index', {});
 	});
 

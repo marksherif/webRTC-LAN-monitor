@@ -53,5 +53,19 @@
         Upload Progress:
         <progress style="width:25%" id="download-progress" value="0" max="100"></progress>
     </div>
+    <br>
+
+    <div>
+        <h3>Quiet Mode</h3>
+        <label class="switch">
+            <input id="quiet_mode" type="checkbox">
+            <span class="slider round"></span>
+        </label>
+        <div>
+            <meter id="sound_monitor" high="0.25" max="1" value="0"></meter>
+            <p>Sound Loudness Value:</p>
+            <p id=sound_value>0.00</p>
+        </div>
+    </div>
 
     <script src="/js/dashboard_main.js"></script>

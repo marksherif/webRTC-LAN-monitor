@@ -3,12 +3,15 @@
 /**
  * Module dependencies.
  */
-
 var app = require('../app');
 var debug = require('debug')('node-sbadmin:server');
+var index = require('../routes/index.js');
+var User = require('../persister/user');
 
 var https = require("https");
 const fs = require('fs');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey('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');
 var WebSocketServer = require('ws').Server,
   // wss = new WebSocketServer({ port: 8888 }),
   users = {};
@@ -189,6 +192,27 @@ wss.on('connection', function (connection) {
             users: Object.keys(users)
           });
         }
+        break;
+      case "notify":
+        console.log("Notifying user of loud noises");
+        User.findOne({ '_id': index.current_user },
+          function (err, user) {
+            // In case of any error, return using the done method
+            if (err)
+              console.log(err);
+            // Username does not exist, log error & redirect back
+            if (user) {
+              const msg = {
+                to: user.email,
+                from: 'baby@monitor.com',
+                subject: 'Baby Monitor Detected Lound Noises',
+                text: 'The monitor detected loud noises, your baby might be crying',
+                html: '<strong>The monitor detected loud noises, your baby might be crying</strong><br><p>Baby Monitor - Mark S.</p>',
+              };
+              sgMail.send(msg);
+            }
+          }
+        );
         break;
       default:
         sendTo(connection, {

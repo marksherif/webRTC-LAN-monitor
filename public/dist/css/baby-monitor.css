@@ -61,9 +61,7 @@ body {
     white-space: normal;
 }
 
-.navbar-top-links .dropdown-messages,
-.navbar-top-links .dropdown-tasks,
-.navbar-top-links .dropdown-alerts {
+.navbar-top-links .dropdown-messages, .navbar-top-links .dropdown-tasks, .navbar-top-links .dropdown-alerts {
     width: 310px;
     min-width: 0;
 }
@@ -114,8 +112,7 @@ body {
     content: "\f107";
 }
 
-.sidebar .nav-second-level li,
-.sidebar .nav-third-level li {
+.sidebar .nav-second-level li, .sidebar .nav-third-level li {
     border-bottom: 0!important;
 }
 
@@ -134,10 +131,7 @@ body {
         width: 250px;
         margin-top: 51px;
     }
-
-    .navbar-top-links .dropdown-messages,
-    .navbar-top-links .dropdown-tasks,
-    .navbar-top-links .dropdown-alerts {
+    .navbar-top-links .dropdown-messages, .navbar-top-links .dropdown-tasks, .navbar-top-links .dropdown-alerts {
         margin-left: auto;
     }
 }
@@ -168,11 +162,7 @@ body {
     color: #d9534f;
 }
 
-.btn-primary.btn-outline:hover,
-.btn-success.btn-outline:hover,
-.btn-info.btn-outline:hover,
-.btn-warning.btn-outline:hover,
-.btn-danger.btn-outline:hover {
+.btn-primary.btn-outline:hover, .btn-success.btn-outline:hover, .btn-info.btn-outline:hover, .btn-warning.btn-outline:hover, .btn-danger.btn-outline:hover {
     color: #fff;
 }
 
@@ -200,8 +190,7 @@ body {
     margin: 0;
 }
 
-.panel .slidedown .glyphicon,
-.chat .glyphicon {
+.panel .slidedown .glyphicon, .chat .glyphicon {
     margin-right: 5px;
 }
 
@@ -229,11 +218,7 @@ body {
     clear: both;
 }
 
-table.dataTable thead .sorting,
-table.dataTable thead .sorting_asc,
-table.dataTable thead .sorting_desc,
-table.dataTable thead .sorting_asc_disabled,
-table.dataTable thead .sorting_desc_disabled {
+table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc_disabled {
     background: 0 0;
 }
 
@@ -253,7 +238,7 @@ table.dataTable thead .sorting:after {
     content: "\f0dc";
     float: right;
     font-family: fontawesome;
-    color: rgba(50,50,50,.5);
+    color: rgba(50, 50, 50, .5);
 }
 
 .btn-circle {
@@ -366,23 +351,26 @@ video {
     height: 500px;
 }
 
- /* The switch - the box around the slider */
- .switch {
+/* The switch - the box around the slider */
+
+.switch {
     position: relative;
     display: inline-block;
     width: 60px;
     height: 34px;
-  }
-  
-  /* Hide default HTML checkbox */
-  .switch input {
+}
+
+/* Hide default HTML checkbox */
+
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
-  }
-  
-  /* The slider */
-  .slider {
+}
+
+/* The slider */
+
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -392,9 +380,9 @@ video {
     background-color: #ccc;
     -webkit-transition: .4s;
     transition: .4s;
-  }
-  
-  .slider:before {
+}
+
+.slider:before {
     position: absolute;
     content: "";
     height: 26px;
@@ -404,27 +392,43 @@ video {
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
-  }
-  
-  input:checked + .slider {
+}
+
+input:checked+.slider {
     background-color: #2196F3;
-  }
-  
-  input:focus + .slider {
+}
+
+input:focus+.slider {
     box-shadow: 0 0 1px #2196F3;
-  }
-  
-  input:checked + .slider:before {
+}
+
+input:checked+.slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
+}
+
+/* Rounded sliders */
+
+.slider.round {
     border-radius: 34px;
-  }
-  
-  .slider.round:before {
+}
+
+.slider.round:before {
     border-radius: 50%;
-  } 
+}
+
+meter {
+    /* margin: 0 auto 4.5em; */
+    width: 450px;
+    height: 20px;
+    display: block;
+}
+
+meter::-webkit-meter-even-less-good-value {
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(170, 221, 119)), color-stop(0.2, rgb(204, 238, 170)), color-stop(0.45, rgb(119, 170, 51)), color-stop(0.55, rgb(119, 170, 51)), to(rgb(170, 221, 119)));
+}
+
+meter::-webkit-meter-optimum-value {
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255, 119, 119)), color-stop(0.2, rgb(255, 204, 204)), color-stop(0.45, rgb(221, 68, 68)), color-stop(0.55, rgb(221, 68, 68)), to(rgb(255, 119, 119)));
+}

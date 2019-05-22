@@ -4,7 +4,6 @@
  * Module dependencies.
  */
 var app = require('../app');
-var debug = require('debug')('node-sbadmin:server');
 var index = require('../routes/index.js');
 var User = require('../persister/user');
 
@@ -61,18 +60,6 @@ function onError(error) {
     default:
       throw error;
   }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
 }
 
 
@@ -163,7 +150,7 @@ wss.on('connection', function (connection) {
           var conn = users[data.admin_id];
           console.log(conn);
 
-          console.log("ID TAKEN");
+          console.log("ID is taken");
 
           sendTo(conn, {
             type: "id_taken",

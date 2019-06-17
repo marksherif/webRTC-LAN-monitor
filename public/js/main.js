@@ -374,7 +374,7 @@ var sound = document.createElement('audio');
 //play audio
 function initSound(audioBase64) {
     var one_line_string = audioBase64.join().replace(/,/g, '');
-    if (one_line_string.slice(0, 15).includes("wav"))
+    if (one_line_string.slice(0, 15).includes("wav") || (one_line_string.slice(0, 15).includes("mp3")))
         output = [one_line_string.slice(0, 21), ',', one_line_string.slice(21)].join('');
     else if (one_line_string.slice(0, 15).includes("mpeg"))
         output = [one_line_string.slice(0, 22), ',', one_line_string.slice(22)].join('');

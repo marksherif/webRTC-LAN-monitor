@@ -32,9 +32,6 @@ module.exports = function (app, passport) {
 		failureRedirect: '/signup',
 		failureFlash: true
 	}));
-	app.get('/readme', isAuthenticated, function (req, res) {
-		res.render('template/readme', {});
-	});
 	app.get('/dashboard', isAuthenticated, function (req, res) {
 		module.exports.current_user = req.session.passport.user
 		res.render('template/index', {});

@@ -10,7 +10,7 @@ var User = require('../persister/user');
 var https = require("https");
 const fs = require('fs');
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey('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');
+sgMail.setApiKey('ENTER SENDGRID API HERE');
 var WebSocketServer = require('ws').Server,
   // wss = new WebSocketServer({ port: 8888 }),
   users = {};
@@ -32,7 +32,6 @@ const wss = new WebSocketServer({ server });
 
 server.listen(3000);
 server.on('error', onError);
-server.on('listening', onListening);
 
 /**
  * Event listener for HTTP server "error" event.
@@ -193,8 +192,8 @@ wss.on('connection', function (connection) {
                 to: user.email,
                 from: 'baby@monitor.com',
                 subject: 'Baby Monitor Detected Lound Noises',
-                text: 'The monitor detected loud noises, your baby might be crying',
-                html: '<strong>The monitor detected loud noises, your baby might be crying</strong><br><p>Baby Monitor - Mark S.</p>',
+                text: 'Monitor ID: "' + data.monitor_id + '" detected loud noises, your baby might be crying',
+                html: '<strong>Monitor ID: "' + data.monitor_id + '" detected loud noises, your baby might be crying</strong><br><p>Baby Monitor - Mark S.</p>',
               };
               sgMail.send(msg);
             }

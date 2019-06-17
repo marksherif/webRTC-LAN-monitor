@@ -352,7 +352,7 @@ sendFileButton.addEventListener("click", function (event) {
 var progress = document.querySelector('#download-progress');
 
 
-var CHUNK_MAX = 16000;
+var CHUNK_MAX = 30000;
 function sendFile(file) {
     var reader = new FileReader();
     reader.readAsDataURL(file);
@@ -447,6 +447,8 @@ function SoundMeter(context) {
     const that = this;
     this.script.onaudioprocess = function (event) {
         const input = event.inputBuffer.getChannelData(0);
+        console.log(input);
+
         let i;
         let sum = 0.0;
         for (i = 0; i < input.length; ++i) {
@@ -489,6 +491,7 @@ SoundMeter.prototype.stop = function () {
 
 function sendEmail() {
     send({
-        type: "notify"
+        type: "notify",
+        monitor_id: sel.options[sel.selectedIndex].value
     });
 }

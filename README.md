@@ -1,19 +1,19 @@
-# Over LAN Baby Monitor 
+# LAN Monitor 
 
-This is a WebRTC powered baby monitoring solution that is functional over LAN networks
+This is a WebRTC powered LAN cctv solution
 
 # Compiling and Running
 
 First launch mongoDB and set it to listen on port 27017 (default) then
 
 ```sh
-git clone git@github.com:marksherif/webRTC-baby-monitor.git
-cd webRTC-baby-monitor
+git clone git@github.com:marksherif/webRTC-LAN-monitor.git
+cd webRTC-LAN-monitor
 npm install
 node bin/www
 ```
 
-Now it is up and running, visit [https://localhost:3000/monitor](https://localhost:3000/monitor) to set up the baby monitor and [https://localhost:3000/dashboard](https://localhost:3000/dashboard) to monitor and control the baby monitors.
+Now it is up and running, visit [https://localhost:3000/monitor](https://localhost:3000/monitor) to set up the camera and [https://localhost:3000/dashboard](https://localhost:3000/dashboard) to monitor and control all cameras.
 
 ### Features
 

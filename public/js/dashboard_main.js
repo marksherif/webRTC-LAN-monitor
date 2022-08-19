@@ -53,7 +53,6 @@ function onUsers(users) {
     sel.options.length = 0;
     online_users = [];
     users.forEach(function (user) {
-        // list += `<li>` + user + ` <input type="button" value="Call" onclick="callUser('` + user + `')" id="makeCall" /></li>`
         var opt = document.createElement('option');
         opt.appendChild(document.createTextNode(user));
         opt.value = user;
@@ -234,7 +233,6 @@ function startPeerConnection(user) {
 
 function onOffer(offer, name) {
     connectedUser = name;
-    // console.log(offer)
     yourConnection.setRemoteDescription(new
         RTCSessionDescription(offer));
 
@@ -261,7 +259,6 @@ function onAnswer(answer) {
 };
 
 function onCandidate(candidate) {
-    // if (yourConnection.signalingState == "stable") return;
     yourConnection.addIceCandidate(new RTCIceCandidate(candidate));
 };
 
@@ -298,9 +295,6 @@ function onLeave() {
 };
 
 function openDataChannel() {
-    // var dataChannelOptions = {
-    //     reliable: true
-    // };
     dataChannel = yourConnection.createDataChannel("lullaby");
 
     dataChannel.onerror = function (error) {
@@ -317,7 +311,6 @@ function openDataChannel() {
                 case "end":
                     console.log(currentFile);
                     initSound(currentFile);
-                    // case "end": saveFile(currentFileMeta, currentFile);
                     break;
             }
         } catch (e) {
@@ -327,7 +320,6 @@ function openDataChannel() {
     };
     dataChannel.onopen = function () {
         console.log('datachannel is now open');
-        // dataChannel.send(user_id + " has connected.");
     };
     dataChannel.onclose = function () {
         console.log("The Data Channel is Closed");

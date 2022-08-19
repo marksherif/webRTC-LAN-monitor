@@ -47,18 +47,6 @@ connection.onmessage = function (message) {
 
 
 function onUsers(users) {
-    // users = users.filter(function (x) { return x !== user_id; })
-    // var list = '';
-    // for (i = 0; i < length; i++) {
-    //     sel.options[i] = null;
-    // }
-    // users.forEach(function (user) {
-    //     // list += `<li>` + user + ` <input type="button" value="Call" onclick="callUser('` + user + `')" id="makeCall" /></li>`
-    //     var opt = document.createElement('option');
-    //     opt.appendChild(document.createTextNode(user));
-    //     opt.value = user;
-    //     sel.appendChild(opt);
-    // })
 
 }
 
@@ -120,16 +108,6 @@ function startConnection() {
 }
 
 function setupPeerConnection(incomingStream) {
-    // var configuration = {
-    // }
-    // var STUN = {
-    //     'url': 'stun:stun.l.google.com:19302',
-    // };
-
-    // var iceServers =
-    // {
-    //     iceServers: [STUN]
-    // };
     stream = incomingStream
     yourConnection = new RTCPeerConnection();
     openDataChannel();
@@ -270,17 +248,11 @@ function onAnswer(answer) {
 };
 
 function onCandidate(candidate) {
-    // if (yourConnection.signalingState == "stable") return;
     yourConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    // console.log(candidate);
-
 };
 
 
 function openDataChannel() {
-    // var dataChannelOptions = {
-    //     reliable: true
-    // };
     dataChannel = yourConnection.createDataChannel("lullaby");
 
     dataChannel.onerror = function (error) {
@@ -297,7 +269,6 @@ function openDataChannel() {
                 case "end":
                     console.log(currentFile);
                     initSound(currentFile);
-                    // case "end": saveFile(currentFileMeta, currentFile);
                     break;
             }
         } catch (e) {
@@ -307,7 +278,6 @@ function openDataChannel() {
     };
     dataChannel.onopen = function () {
         console.log('datachannel is now open');
-        // dataChannel.send(user_id + " has connected.");
     };
     dataChannel.onclose = function () {
         console.log("The Data Channel is Closed");
@@ -325,8 +295,6 @@ function onLeave() {
         yourConnection.close();
     if (yourConnection.onicecandidate)
         yourConnection.onicecandidate = null;
-    // if (yourConnection.ontrack)
-    //     yourConnection.ontrack = null;
 };
 
 function hasFileApi() { return window.File && window.FileReader && window.FileList && window.Blob; }
@@ -386,11 +354,6 @@ function initSound(audioBase64) {
 
     }
     console.log(output);
-
-    // audio.controls = true;
-    // document.body.appendChild(audio);
-    // audio.play();
-
 
     sound.id = 'audio-player';
     sound.controls = 'controls';
